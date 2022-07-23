@@ -19,6 +19,10 @@ $filesDirectory = __DIR__ . '/files';
 $action = $argv['1'];
 
 if ($action == 'setup') {
+    @mkdir($setupsDirectory);
+    @mkdir($emailsDirectory);
+    @mkdir($filesDirectory);
+    
     $setup = json_decode(file_get_contents('setup.json'));
     $response = [];
 
@@ -26,7 +30,7 @@ if ($action == 'setup') {
         if ($options->default) {
             $options->description = str_replace('{default}', $options->default, $options->description);
         }
-        
+
         echo "$options->description: ";
 
         $fin = fopen ("php://stdin","r");
