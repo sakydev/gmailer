@@ -1,0 +1,51 @@
+{
+    "username": {
+        "description": "Gmail username e.g test@gmail.com",
+        "required": true
+    },
+    "appPassword": {
+        "description": "Gmail app password",
+        "required": true
+    },
+    "senderName": {
+        "description": "Sender name e.g Jon Snow",
+        "required": true
+    },
+    "subject": {
+        "description": "Subject e.g The winter is coming",
+        "required": true
+    },
+    "message": {
+        "description": "Message e.g We must fight the Night King!",
+        "required": true
+    },
+    "target": {
+        "description": "Filepath with line separated email addresses",
+        "required": true
+    },
+    "port": {
+        "description": "Gmail SMTP port (default: {default})",
+        "required": false,
+        "default": 587
+    },
+    "max": {
+        "description": "Maximum number of emails to send (default: {default})",
+        "required": false,
+        "default": 100
+    },
+    "skip": {
+        "description": "Number of emails to skip before starting sending emails (default: {default})",
+        "required": false,
+        "default": 0
+    },
+    "files": {
+        "description": "Comma separated list of file paths to attatch with emails (default: {default})",
+        "required": false,
+        "default": ""
+    },
+    "debug": {
+        "description": "Enable debug messages (default: {default})",
+        "required": false,
+        "default": 0
+    }
+}

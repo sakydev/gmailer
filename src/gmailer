@@ -1,0 +1,59 @@
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/helpers.php';
+require __DIR__ . '/Gmailer.php';
+
+if (php_sapi_name() != 'cli') {
+    throw new Exception('This application must be run on the command line.');
+}
+
+if (count($argv) < 2) {
+    exit('php gmailer {action} --{option}');
+}
+
+$setupsDirectory = __DIR__ . '/setups';
+$emailsDirectory = __DIR__ . '/emails';
+$filesDirectory = __DIR__ . '/files';
+
+$action = $argv['1'];
+
+if ($action == 'setup') {
+    $setup = json_decode(file_get_contents('setup.json'));
+    $response = [];
+
+    foreach ($setup as $field => $options) {
+        if ($options->default) {
+            $options->description = str_replace('{default}', $options->default, $options->description);
+        }
+        
+        echo "$options->description: ";
+
+        $fin = fopen ("php://stdin","r");
+        $answer = trim(fgets($fin));
+        
+        if ($options->required && empty($answer)) {
+            echo "{$field} is required\n";
+            exit;
+        }
+
+        if ($field == 'target' && !file_exists($answer)) {
+            echo "Emails file does not exist @ {$answer}\n";
+            exit;
+        }
+
+        $response[$field] = $answer;
+    }
+
+    $filename = $setupsDirectory . '/' . $response['username'] . '.json';
+    file_put_contents($filename, json_encode($response));
+
+    echo "Setup complete\n";
+    echo "Run: php gmailer send {$filename}\n";
+
+} else if ($action == 'send') {
+    $setup = json_decode(file_get_contents($argv['2']));
+    
+    $gmailer = new Gmailer($setup);
+    $gmailer->send();
+}
